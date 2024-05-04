@@ -1,0 +1,158 @@
+h1 {
+    padding-left: 20px;
+}
+
+.top-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 25px;
+    height: 500px;
+}
+
+.site-description {
+    padding: 20px;
+    width: 40%;
+    height: 90%;
+    background-color: beige;
+}
+
+.top-ten-leaderboard,
+.bottom-ten-leaderboard {
+    padding: 20px;
+    width: 30%;
+    height: 90%;
+}
+
+.site-description:not(:last-child) {
+    border-right: 2px solid #000000;
+}
+
+hr {
+    border: none;
+    height: 2px;
+    background-color: #000000;
+}
+
+.button {
+    padding-left: 50px;
+    padding-right: 50px;
+    background-color: beige;
+    color: navy;
+}
+
+.filter-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    height: 25px;
+    color: white;
+    background-color: navy;
+}
+
+.filter {
+    background-color: beige;
+    color: navy;
+    padding: 3px;
+}
+
+.chart-filter {
+    text-align: left;
+    width: 50%;
+}
+
+.bottom-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    height: 500px;
+    position: relative;
+}
+
+.chase-rate-chart {
+    width: 30%;
+    padding: 15px;
+    height: 90%;
+}
+
+.chase-rate-table {
+    width: 20%;
+    padding: 15px;
+    background-color: beige;
+    height: 90%;
+    font-size: 20px;
+    border-left: 2px solid #000000;
+}
+
+strong {
+    color: navy;
+    font-weight: bold;
+}
+
+.leaderboard {
+    width: 100%;
+    height: 90%;
+}
+
+.leaderboard-title {
+    background-color: beige;
+    color: navy;
+    text-align: center;
+    margin-top: 0;
+    padding: 10px;
+    border-bottom: 2px solid #000000;
+}
+
+.leaderboard-header {
+    background-color: navy;
+    color: white;
+    border-bottom: 2px solid #000000;
+}
+
+td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    padding: 14px;
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background-color: beige;
+}
+
+.loader {
+    border: 4px solid beige;
+    border-top: 4px solid navy;
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
+    animation: spin 2s linear infinite;
+    display: none; /* Initially hidden */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

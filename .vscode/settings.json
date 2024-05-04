@@ -1,0 +1,18 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 100,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "database": "mlb_statcast_data",
+            "username": "root",
+            "name": "MLB-Statcast-DB"
+        }
+    ],
+    "python.REPL.enableREPLSmartSend": false
+}

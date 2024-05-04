@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang = 'en'>
+<head>
+    <meta charset = 'UTF-8'>
+    <meta name = 'viewport' content = 'width=device-width, intial-scale = 1.0'>
+    <title>MLB 2024 Chase Rates</title>
+    <link rel = 'stylesheet' href = "static\styles.css">
+</head>
+<body>
+    <h1>MLB Chase Rates and Batting Averages</h1>
+    <div class = 'top-panel'>
+        <div class = 'site-description'>
+            <p>
+                <strong>About this WebApp:</strong>
+                <br>
+                For the duration of the 2024 MLB season, statcast data is being collected for every player on every team. 
+                This application allows you to explore the chase rates of every MLB player and team for the 2024 season. 
+                The data gets updated everyday so be sure to check back later in the season to see if your team or favorite player made an adjustment.
+                <br>
+                <br>
+                <strong>How is chase rate calculated?</strong>
+                <br> 
+                Simply put, it is the amount of swings a player has on balls outside of the traditional strike zone divided by the total number of swings by a player. 
+                Please note: this does not take into account how far out of the zone a pitch is, it is only based on the x and y coordinate generated from the statcast data. 
+                Data is only calculated for players with greater than X swings for the year.
+                <br>
+                <br>
+                <strong>Directions:</strong>
+                <br>
+                You can filter by team and view that teams data, and you can further filter by each player on that team that qualifies. To qualify for the leaderboard, a player must have 
+                at least 100 swing attempts on the season so far. This number will likely change as the season progresses. By selecting 'View All', you will the data for the entire team. This allows
+                you to compare teams as well as players. Once you have decided on who to view, click on "Generate Charts" to view the data for those players. Leaderboards are updated as soon as the data is updated. If you do not see any changes, that means nothing has changed, or you can refresh to regenerate the leaderboard.
+                <br>
+                <br>
+                <strong>How to read the charts:</strong>
+                <br>
+                The chart contains a pitch location density chart overlayed on top of the density plot of pitches that a player swung at. In other words, the black lines are where a player has seen pitches thrown,
+                and the colored areas are the pitches that a player chose to swing at. The red color means that the player swung at the most pitches in that area, the blue areas mean less swings but still enough to be
+                considered consistent. Ideally, you want to see a player with a smaller range of pitches they swing at, this shows more disicipline at the plate and will often times lead to a higher batting average.
+                You will see the specific data for each player or team in the tables next to the charts. 
+            </p>
+        </div>
+        <div class = 'top-ten-leaderboard'>
+            <h3 class = 'leaderboard-title'>Lowest Chase % (min 100 swings)</h3>
+            <table border = 0, class = 'leaderboard'>
+                <thead class = leaderboard-header>
+                    <tr>
+                        <th>Player Name</th>
+                        <th>Team</th>
+                        <th>Chases</th>
+                        <th>Swings</th>
+                        <th>Chase %</th>
+                        <th>BA</th>
+                    </tr>
+                </thead>
+                <tbody class = 'leaderboard-body'>
+                    {% for row in top_ten %}
+                    <tr>
+                        <td>{{ row.player_name }}</td>
+                        <td>{{ row.team_abbrv }}</td>
+                        <td>{{ row.chases }}</td>
+                        <td>{{ row.swings }}</td>
+                        <td>{{ row.chase_pct }}</td>
+                        <td>{{ row.BA }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div> 
+        <div class = 'bottom-ten-leaderboard'>
+            <h3 class = 'leaderboard-title'>Highest Chase % (min 100 swings)</h3>
+            <table border = 0, class = leaderboard>
+                <thead class = 'leaderboard-header'>
+                    <tr>
+                        <th>Player Name</th>
+                        <th>Team</th>
+                        <th>Chases</th>
+                        <th>Swings</th>
+                        <th>Chase %</th>
+                        <th>BA</th>
+                    </tr>
+                </thead>
+                <tbody class = leaderboard-body>
+                    {% for row in bottom_ten %}
+                    <tr>
+                        <td>{{ row.player_name }}</td>
+                        <td>{{ row.team_abbrv }}</td>
+                        <td>{{ row.chases }}</td>
+                        <td>{{ row.swings }}</td>
+                        <td>{{ row.chase_pct }}</td>
+                        <td>{{ row.BA }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+    <br>
+    <hr>
+    <div class = 'bottom-panel-title'>
+        <h2>Chase Rate Charts - Compare Teams or Players</h2>
+        <h3>Use the filters to view specific players or teams</h3>
+    </div>
+    <button class = 'button' id = 'generate-chart-button'>Generate Charts</button>
+    <div class = 'filter-panel'>
+        <div class = 'chart-filter'>
+            <label for="teams-filter-1">Select team:</label>
+            <select class = 'filter' id="teams-filter-1" name="teams">
+                {% for team in teams %}
+                <option value="{{ team }}">{{ team }}</option>
+                {% endfor %}
+            </select>
+        
+            <label for="players-1">Select player:</label>
+            <select class = 'filter' id="players-1" name="players">
+                <!-- Team members will be populated dynamically from JavaScript -->
+            </select>
+        
+            <script>
+                //This line gets the element with the id = 'teams', and adds an event listener that looks for a change in that element
+                //this looks at the 'Select Team' dropdown, and returns that team back to my script to get the players on that team
+                document.getElementById('teams-filter-1').addEventListener('change', function() {
+
+                    //This line is what actually retrieves the value from the dropdown
+                    var selectedTeam = this.value;
+
+                    //when we make our flask app, we can define which route to fetch to, in this case it is '/team_members' but I can change that if I want
+                    //this sends a POST request, in JSON format
+                    //fetch is a modern JavaScript API for making HTTP requests
+                    fetch('/team_members', {
+                        method: 'POST',
+                        body: JSON.stringify({ team: selectedTeam }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+
+                    //This line waits for a repsonse from Flask, when it gets one, it converts it to JSON format
+                    .then(response => response.json())
+
+                    //when the response is converted to json, this code populates the second dropdown
+                    .then(data => {
+
+                        //get the second dropdown element by its ID
+                        var select = document.getElementById('players-1');
+
+                        //clear the options that are already present
+                        select.innerHTML = '';
+
+                        //loop through each element and create a new dropdown option for every player on a team
+                        data.forEach(function(member) {
+                            var option = document.createElement('option');
+                            option.text = member.name;
+                            option.value = member.id;
+                            select.appendChild(option);
+                        });
+                    });
+                });
+            </script>
+        </div>
+        <div class = 'chart-filter'>
+            <label for="teams-filter-2">Select team:</label>
+            <select class = 'filter' id="teams-filter-2" name="teams">
+                {% for team in teams %}
+                <option value="{{ team }}">{{ team }}</option>
+                {% endfor %}
+            </select>
+        
+            <label for="players-2">Select player:</label>
+            <select class = 'filter' id="players-2" name="players">
+                <!-- Team members will be populated dynamically from JavaScript -->
+            </select>
+        
+            <script>
+                //This line gets the element with the id = 'teams', and adds an event listener that looks for a change in that element
+                //this looks at the 'Select Team' dropdown, and returns that team back to my script to get the players on that team
+                document.getElementById('teams-filter-2').addEventListener('change', function() {
+
+                    //This line is what actually retrieves the value from the dropdown
+                    var selectedTeam = this.value;
+
+                    //when we make our flask app, we can define which route to fetch to, in this case it is '/team_members' but I can change that if I want
+                    //this sends a POST request, in JSON format
+                    //fetch is a modern JavaScript API for making HTTP requests
+                    fetch('/team_members', {
+                        method: 'POST',
+                        body: JSON.stringify({ team: selectedTeam }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+
+                    //This line waits for a repsonse from Flask, when it gets one, it converts it to JSON format
+                    .then(response => response.json())
+
+                    //when the response is converted to json, this code populates the second dropdown
+                    .then(data => {
+
+                        //get the second dropdown element by its ID
+                        var select = document.getElementById('players-2');
+
+                        //clear the options that are already present
+                        select.innerHTML = '';
+
+                        //loop through each element and create a new dropdown option for every player on a team
+                        data.forEach(function(member) {
+                            var option = document.createElement('option');
+                            option.text = member.name;
+                            option.value = member.id;
+                            select.appendChild(option);
+                        });
+                    });
+                });
+            </script>
+        </div>
+    </div>
+    <div class = 'bottom-panel'>
+        <div class = 'chase-rate-chart'>
+            <img id = 'chart-1' src = "">
+            <div class = 'loader' id = 'loader1'></div>
+        </div>
+        <div class = 'chase-rate-table', id = 'table-1'>
+        </div>
+        <div class = 'chase-rate-chart'>
+            <img id = 'chart-2', src = "">
+            <div class = 'loader' id = 'loader2'></div>
+        </div>
+        <div class = 'chase-rate-table', id = 'table-2'>
+        </div>
+        <script>
+            document.getElementById('generate-chart-button').addEventListener('click', function() {
+                // Show loading indicator for Chart 1
+                document.getElementById('loader1').style.display = 'block';
+                // Show loading indicator for Chart 2
+                document.getElementById('loader2').style.display = 'block';
+
+                var selectedTeam1 = document.getElementById('teams-filter-1').value;
+                var selectedPlayer1 = document.getElementById('players-1').value;
+                var selectedTeam2 = document.getElementById('teams-filter-2').value;
+                var selectedPlayer2 = document.getElementById('players-2').value;
+            
+                fetch('/generate_charts', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        chart1: { team: selectedTeam1, player: selectedPlayer1 },
+                        chart2: { team: selectedTeam2, player: selectedPlayer2 }
+                    }),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Hide loading indicator for Chart 1
+                    document.getElementById('loader1').style.display = 'none';
+                    // Hide loading indicator for Chart 2
+                    document.getElementById('loader2').style.display = 'none';
+
+                    document.getElementById('chart-1').src = data.chart1;
+                    document.getElementById('chart-2').src = data.chart2;
+            });
+        });
+        </script>
+        <script>
+            document.getElementById('generate-chart-button').addEventListener('click', function() {
+            var selectedTeam1 = document.getElementById('teams-filter-1').value;
+            var selectedPlayer1 = document.getElementById('players-1').value;
+            var selectedTeam2 = document.getElementById('teams-filter-2').value;
+            var selectedPlayer2 = document.getElementById('players-2').value;
+
+            fetch('/generate_tables', {
+                method: 'POST',
+                body: JSON.stringify({
+                    table1: { team: selectedTeam1, player: selectedPlayer1 },
+                    table2: { team: selectedTeam2, player: selectedPlayer2 }
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                var textOutput1 = '';
+                var textOutput2 = '';
+
+                // Generate text output with bold keys for Table 1
+                var table1 = JSON.parse(data.table1);
+                table1.forEach(row => {
+                    for (const key in row) {
+                        textOutput1 += `<strong>${key}:</strong> ${row[key]}<br><br><br>`;
+                    }
+                    textOutput1 += '<br><br><br>'; // Add an extra line break after each entry
+                });
+
+                // Generate text output with bold keys for Table 2
+                var table2 = JSON.parse(data.table2);
+                table2.forEach(row => {
+                    for (const key in row) {
+                        textOutput2 += `<strong>${key}:</strong> ${row[key]}<br><br><br>`;
+                    }
+                    textOutput2 += '<br><br><br>'; // Add an extra line break after each entry
+                });
+
+                // Display the formatted text in the respective divs
+                document.getElementById('table-1').innerHTML = textOutput1;
+                document.getElementById('table-2').innerHTML = textOutput2;
+            });
+        });
+        </script>
+    </div>
+</body>
