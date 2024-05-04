@@ -221,10 +221,10 @@ get_max_date <- function(table_name = c("game_schedule", "pitches")){
 
     # connect to the database
     con <- dbConnect(MySQL(),
-                    user = "root",
-                    password = "FOODS_test1",
-                    host = "localhost",
-                    dbname = "mlb_statcast_data")
+                    user = "**********",
+                    password = "**********",
+                    host = "*********",
+                    dbname = "**********")
 
     # get the day after the maximum date that is found in the table
     # this date is used as the start date for getting our updated data
@@ -249,10 +249,10 @@ max_pitch_date <- get_max_date("pitches")
 
 
 con <- dbConnect(MySQL(),
-                user = "root",
-                password = "FOODS_test1",
-                host = "localhost",
-                dbname = "mlb_statcast_data")
+                    user = "**********",
+                    password = "**********",
+                    host = "*********",
+                    dbname = "**********")
 
 query <- paste("select game_id from game_schedule where game_status = 'Final';")
 
