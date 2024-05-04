@@ -9,10 +9,10 @@ import os
 # this saves me from writing this many times, I only have to do it once and then call the function
 def get_db():
     try:
-        connection = pymysql.connect(host='localhost',
-                                    user='root',
-                                    password='FOODS_test1',
-                                    database='mlb_statcast_data',
+        connection = pymysql.connect(host='*****',
+                                    user='*******',
+                                    password='********',
+                                    database='****',
                                     cursorclass=pymysql.cursors.DictCursor
                                     )
         return connection
@@ -513,7 +513,7 @@ def create_chase_rate_chart(team1, player1, team2, player2):
     
 
     except:
-        raise Exception("Could not generate the charts. Trying check chart generation code or check connection to the database.")
+        raise Exception("Could not generate the charts. Trying checking chart generation code or check connection to the database.")
     finally:
         cursor.close()
         connection.close()
