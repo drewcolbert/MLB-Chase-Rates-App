@@ -3,7 +3,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sns
 from io import BytesIO
-import os
+
 
 # create a function to get my connection to the database
 # this saves me from writing this many times, I only have to do it once and then call the function
