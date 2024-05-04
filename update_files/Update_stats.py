@@ -11,10 +11,10 @@ def update_stats(file_path):
 
         # connects to my MySQL DB and allows me to query from it
         # this is a very similar set up to the R version of doing this
-        connection = pymysql.connect(host='localhost',
-                                    user='root',
-                                    password='FOODS_test1',
-                                    database='mlb_statcast_data',
+        connection = pymysql.connect(host='****',
+                                    user='*********',
+                                    password='*******',
+                                    database='******',
                                     # this code tells pymysql to choose the cursor that returns the reuslts as dictionary
                                     # this gives me column names as the keys and the column values as the values
                                     cursorclass=pymysql.cursors.DictCursor
