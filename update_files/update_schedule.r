@@ -26,10 +26,10 @@ library(rvest)
 
 # get all of the games currently in my database
 con <- dbConnect(MySQL(),
-                user = "root",
-                password = "FOODS_test1",
-                host = "localhost",
-                dbname = "mlb_statcast_data")
+                user = "******",
+                password = "*******",
+                host = "*****",
+                dbname = "******")
 
 
 query <- "select * from game_schedule;"
