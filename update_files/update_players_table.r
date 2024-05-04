@@ -22,10 +22,10 @@ library(tidyr)
 # send my query and fetch the results into the 'my_players' variable
 # remove the variables used to get the data and then disconnect from the database
 con <- dbConnect(MySQL(),
-                user = "root",
-                password = "FOODS_test1",
-                host = "localhost",
-                dbname = "mlb_statcast_data")
+                user = "******",
+                password = "*******",
+                host = "*****",
+                dbname = "******")
 
 
 query <- "select * from players;"
